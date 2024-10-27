@@ -7,21 +7,40 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/text_view_title"
+        android:id="@+id/textTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Título"
         android:textStyle="bold"
+        android:textSize="18sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/text_view_author"
+        android:id="@+id/textAuthor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Autor"
-        app:layout_constraintTop_toBottomOf="@id/text_view_title"
+        app:layout_constraintTop_toBottomOf="@id/textTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textGenre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Género"
+        app:layout_constraintTop_toBottomOf="@id/textAuthor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textYear"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Año"
+        app:layout_constraintTop_toBottomOf="@id/textGenre"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
