@@ -1,4 +1,4 @@
-package com.example.novelmanager.novelmanager;
+package com.example.novelmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -13,8 +13,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.novelmanager.model.Novel;
+import com.example.novelmanager.preferences.SettingsActivity;
 import com.example.novelmanager.ui.NovelAdapter;
-
+import com.example.novelmanager.viewmodel.NovelViewModel;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {

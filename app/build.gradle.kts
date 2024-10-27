@@ -52,6 +52,8 @@ dependencies {
     // ViewModel and LiveData
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+    implementation(libs.androidx.preference)
+    implementation(libs.androidx.foundation.layout.android)
 
     // Unit testing dependencies
     testImplementation("junit:junit:4.13.2")

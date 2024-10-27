@@ -1,8 +1,11 @@
 package com.example.novelmanager.database;
 
 import android.app.Application;
+
 import androidx.lifecycle.LiveData;
+
 import com.example.novelmanager.model.Novel;
+
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,7 +14,7 @@ public class NovelRepository {
 
     private NovelDao novelDao;
     private LiveData<List<Novel>> allNovels;
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     public NovelRepository(Application application) {
         NovelDatabase database = NovelDatabase.getInstance(application);
