@@ -1,5 +1,7 @@
 # NovelManager
 
+Link a mi repo:
+
 Este proyecto es una aplicación Android creada para gestionar una biblioteca personal de novelas. La aplicación permite al usuario agregar novelas, visualizarlas en una lista, ver detalles individuales y marcarlas como favoritas. Además, incluye funciones de almacenamiento y personalización.
 
 ## Funcionalidades
