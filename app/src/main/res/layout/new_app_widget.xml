@@ -6,9 +6,28 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/widget_text"
+        android:id="@+id/widget_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Novelas Favoritas"
         android:textStyle="bold" />
+
+    <!-- Tres TextViews para mostrar hasta tres novelas favoritas -->
+    <TextView
+        android:id="@+id/favorite_novel_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorita 1" />
+
+    <TextView
+        android:id="@+id/favorite_novel_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorita 2" />
+
+    <TextView
+        android:id="@+id/favorite_novel_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorita 3" />
 </LinearLayout>

@@ -1,4 +1,5 @@
 package com.example.novelmanager;
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -68,5 +69,28 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return novels;
+    }
+
+    public List<Novel> getFavoriteNovels() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Novel> favoriteNovels = new ArrayList<>();
+        Cursor cursor = db.query("novel_table", null, "is_favorite = ?", new String[]{"1"}, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex("title"));
+                @SuppressLint("Range") String author = cursor.getString(cursor.getColumnIndex("author"));
+                @SuppressLint("Range") String genre = cursor.getString(cursor.getColumnIndex("genre"));
+                @SuppressLint("Range") int year = cursor.getInt(cursor.getColumnIndex("year"));
+                Novel novel = new Novel(title, author, genre, year);
+                novel.setId(id);
+                novel.setFavorite(true);
+                favoriteNovels.add(novel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return favoriteNovels;
     }
 }
