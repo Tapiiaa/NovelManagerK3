@@ -4,41 +4,44 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Elementos existentes -->
     <EditText
         android:id="@+id/editTextTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Title" />
-
     <EditText
         android:id="@+id/editTextAuthor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Author" />
-
     <EditText
         android:id="@+id/editTextGenre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Genre" />
-
     <EditText
         android:id="@+id/editTextYear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Year"
         android:inputType="number" />
-
     <Button
         android:id="@+id/buttonAddNovel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Novel" />
-
     <Button
         android:id="@+id/buttonShowNovels"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Show Novels" />
+
+    <!-- Nuevo contenedor de fragmentos -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

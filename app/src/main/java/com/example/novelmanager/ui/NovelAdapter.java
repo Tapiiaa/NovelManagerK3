@@ -43,6 +43,11 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
         return novelList.size();
     }
 
+    public void setNovels(List<Novel> novels) {
+        this.novelList = novels;
+        notifyDataSetChanged();
+    }
+
     public static class NovelViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
         TextView authorTextView;
