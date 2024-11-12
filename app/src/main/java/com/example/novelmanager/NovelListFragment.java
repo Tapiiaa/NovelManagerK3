@@ -1,6 +1,5 @@
 package com.example.novelmanager;
 
-
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -15,9 +14,10 @@ import com.example.novelmanager.model.Novel;
 import com.example.novelmanager.ui.NovelAdapter;
 import com.example.novelmanager.viewmodel.NovelViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class NovelListFragment extends Fragment {
+public class NovelListFragment extends Fragment implements NovelAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
     private NovelAdapter novelAdapter;
@@ -30,7 +30,9 @@ public class NovelListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
-        novelAdapter = new NovelAdapter(List.of());
+
+        // Inicializa novelAdapter con una lista vacía y this como listener
+        novelAdapter = new NovelAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(novelAdapter);
 
         novelViewModel = new ViewModelProvider(requireActivity()).get(NovelViewModel.class);
@@ -42,5 +44,10 @@ public class NovelListFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        // Maneja el clic en el elemento de la lista aquí
     }
 }

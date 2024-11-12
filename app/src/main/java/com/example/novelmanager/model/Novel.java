@@ -28,6 +28,7 @@ public class Novel {
         return id;
     }
 
+
     public void setId(int id) {
         this.id = id;
     }
@@ -62,5 +63,9 @@ public class Novel {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public void setFavorite(boolean b) {
+
     }
 }
