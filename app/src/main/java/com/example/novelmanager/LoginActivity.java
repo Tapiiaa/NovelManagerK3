@@ -1,0 +1,53 @@
+package com.example.novelmanager;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class LoginActivity extends AppCompatActivity {
+
+    private EditText nameInput;
+    private Button proceedButton;
+    private TextView welcomeText;
+    private SharedPreferences sharedPreferences;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        nameInput = findViewById(R.id.name_input);
+        proceedButton = findViewById(R.id.proceed_button);
+        welcomeText = findViewById(R.id.welcome_text);
+
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+
+        proceedButton.setOnClickListener(v -> {
+            String name = nameInput.getText().toString().trim();
+            if (!name.isEmpty()) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("userName", name);
+                editor.apply();
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String name = sharedPreferences.getString("userName", "");
+        if (!name.isEmpty()) {
+            welcomeText.setText("Bienvenido, " + name);
+        }
+    }
+}
