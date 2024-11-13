@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.novelmanager.model.Novel;
 
-@Database(entities = {Novel.class}, version = 1)
+@Database(entities = {Novel.class}, version = 2)
 public abstract class NovelDatabase extends RoomDatabase {
 
     private static NovelDatabase instance;
@@ -23,4 +23,6 @@ public abstract class NovelDatabase extends RoomDatabase {
         }
         return instance;
     }
+
+
 }

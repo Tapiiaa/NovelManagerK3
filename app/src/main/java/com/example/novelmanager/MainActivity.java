@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
                 String genre = genreEditText.getText().toString();
                 int year = Integer.parseInt(yearEditText.getText().toString());
                 Novel novel = new Novel(title, author, genre, year);
-                databaseHelper.addNovel(novel);
+                databaseHelper.addNovel(novel, true);
             }
         });
 

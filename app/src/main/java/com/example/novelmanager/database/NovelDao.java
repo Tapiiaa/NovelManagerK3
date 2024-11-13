@@ -28,6 +28,8 @@ public interface NovelDao {
 
     @Query("SELECT * FROM novel_table ORDER BY title ASC")
     LiveData<List<Novel>> getAllNovels();
+
+
 }
 
 
