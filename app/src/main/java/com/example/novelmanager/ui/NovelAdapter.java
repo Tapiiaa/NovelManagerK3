@@ -1,6 +1,5 @@
 package com.example.novelmanager.ui;
 
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,6 @@ import com.example.novelmanager.R;
 import com.example.novelmanager.model.Novel;
 
 import java.util.List;
-
-
 
 public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHolder> {
 
@@ -42,14 +39,7 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
     @Override
     public void onBindViewHolder(@NonNull NovelViewHolder holder, int position) {
         Novel novel = novelList.get(position);
-        holder.textViewTitle.setText(novel.getTitle());
-        holder.textViewAuthor.setText(novel.getAuthor());
-        holder.textViewGenre.setText(novel.getGenre());
-        holder.textViewYear.setText(String.valueOf(novel.getYear()));
-
-        holder.itemView.setOnClickListener(v -> listener.onItemClick(position));
-        holder.favoriteButton.setOnClickListener(v -> markAsFavorite(novel));
-        holder.deleteButton.setOnClickListener(v -> deleteNovel(position));
+        holder.bindData(novel); // Optimización para evitar repetición de código
     }
 
     @Override
@@ -61,22 +51,12 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
         return novelList.get(position);
     }
 
-    private void markAsFavorite(Novel novel) {
-        novel.setFavorite(true); // Marca como favorita en el modelo
-        //Actualizar bbdd
-        int position = novelList.indexOf(novel);
-
-    }
-
-    private void deleteNovel(int position) {
-        novelList.remove(position);
-        notifyItemRemoved(position);
-    }
-
     public void setNovels(List<Novel> novels) {
         this.novelList = novels;
+        notifyDataSetChanged(); // Asegura que la lista se actualiza en tiempo real
     }
 
+    // ViewHolder optimizado
     public class NovelViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle, textViewAuthor, textViewGenre, textViewYear;
         ImageButton favoriteButton, deleteButton;
@@ -90,5 +70,25 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
             favoriteButton = itemView.findViewById(R.id.buttonFavorite);
             deleteButton = itemView.findViewById(R.id.buttonDelete);
         }
+
+        public void bindData(Novel novel) {
+            textViewTitle.setText(novel.getTitle());
+            textViewAuthor.setText(novel.getAuthor());
+            textViewGenre.setText(novel.getGenre());
+            textViewYear.setText(String.valueOf(novel.getYear()));
+
+            favoriteButton.setOnClickListener(v -> markAsFavorite(novel));
+            deleteButton.setOnClickListener(v -> deleteNovel(getAdapterPosition()));
+        }
+    }
+
+    private void markAsFavorite(Novel novel) {
+        novel.setFavorite(true);
+        notifyDataSetChanged(); // Actualiza la vista
+    }
+
+    private void deleteNovel(int position) {
+        novelList.remove(position);
+        notifyItemRemoved(position);
     }
 }

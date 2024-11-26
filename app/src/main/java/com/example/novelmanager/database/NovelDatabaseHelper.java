@@ -1,4 +1,4 @@
-package com.example.novelmanager;
+package com.example.novelmanager.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.novelmanager.model.Novel;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +22,11 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_GENRE = "genre";
     private static final String COLUMN_YEAR = "year";
     private static final String COLUMN_IS_FAVORITE = "isFavorite";
+    private final WeakReference<Context> contextRef;
 
     public NovelDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.contextRef = new WeakReference<>(context);
     }
 
     @Override
@@ -43,7 +46,6 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COLUMN_IS_FAVORITE + " INTEGER DEFAULT 0");
         }
     }
-
 
     public void addNovel(Novel novel, boolean isFavorite) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -80,8 +82,20 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
         return novels;
     }
 
+    public void updateNovelFavoriteStatus(String title, boolean isFavorite) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_IS_FAVORITE, isFavorite ? 1 : 0);
+
+        String whereClause = COLUMN_TITLE + "=?";
+        String[] whereArgs = {title};
+
+        db.update(TABLE_NAME, values, whereClause, whereArgs);
+        db.close();
+    }
+
     public List<Novel> getFavoriteNovels() {
-        List<Novel> favoriteNovels = new ArrayList<>();
+        List<Novel> novels = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = COLUMN_IS_FAVORITE + "=?";
         String[] selectionArgs = {"1"};
@@ -93,23 +107,13 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
                 String author = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR));
                 String genre = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GENRE));
                 int year = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_YEAR));
-                favoriteNovels.add(new Novel(title, author, genre, year));
+                Novel novel = new Novel(title, author, genre, year);
+                novel.setFavorite(true);
+                novels.add(novel);
             } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return favoriteNovels;
-    }
-
-    public void updateNovelFavoriteStatus(String title, boolean isFavorite) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_IS_FAVORITE, isFavorite ? 1 : 0);
-
-        String whereClause = COLUMN_TITLE + "=?";
-        String[] whereArgs = {title};
-
-        db.update(TABLE_NAME, values, whereClause, whereArgs);
-        db.close();
+        return novels;
     }
 }

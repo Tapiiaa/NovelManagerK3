@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.novelmanager.database.NovelDatabaseHelper;
 import com.example.novelmanager.model.Novel;
 import com.example.novelmanager.ui.NovelAdapter;
 

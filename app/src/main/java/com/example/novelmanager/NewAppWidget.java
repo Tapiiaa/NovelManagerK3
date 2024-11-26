@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import com.example.novelmanager.database.NovelDatabaseHelper;
 import com.example.novelmanager.model.Novel;
 
 import java.util.List;
