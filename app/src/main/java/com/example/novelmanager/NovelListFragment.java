@@ -1,7 +1,7 @@
 package com.example.novelmanager;
 
-
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,8 @@ public class NovelListFragment extends Fragment implements NovelAdapter.OnItemCl
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setHasFixedSize(true);
 
-        // Inicializar NovelAdapter
-        novelAdapter = new NovelAdapter();
-        novelAdapter.setOnItemClickListener(this);
+        // Inicializar NovelAdapter con lista vacía y listener
+        novelAdapter = new NovelAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(novelAdapter);
 
         // Configurar ViewModel
@@ -72,5 +72,4 @@ public class NovelListFragment extends Fragment implements NovelAdapter.OnItemCl
                 .addToBackStack(null) // Permite volver al fragmento anterior con el botón "Atrás"
                 .commit();
     }
-
 }

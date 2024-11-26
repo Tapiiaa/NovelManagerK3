@@ -34,9 +34,7 @@ public class ShowNovelsActivity extends AppCompatActivity implements NovelAdapte
         List<Novel> novels = databaseHelper.getAllNovels();
 
         // Configurar el adaptador
-        novelAdapter = new NovelAdapter();
-        novelAdapter.setNovels(novels);
-        novelAdapter.setOnItemClickListener(this);
+        novelAdapter = new NovelAdapter(novels, this);
         recyclerView.setAdapter(novelAdapter);
     }
 

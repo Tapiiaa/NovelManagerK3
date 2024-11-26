@@ -1,5 +1,6 @@
 package com.example.novelmanager;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -26,23 +27,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Inicializar vistas
         titleEditText = findViewById(R.id.editTextTitle);
         authorEditText = findViewById(R.id.editTextAuthor);
         genreEditText = findViewById(R.id.editTextGenre);
         yearEditText = findViewById(R.id.editTextYear);
-        imagePathEditText = findViewById(R.id.editTextImagePath); // Nuevo campo para la ruta de la imagen
+        imagePathEditText = findViewById(R.id.editTextImagePath);
         addNovelButton = findViewById(R.id.buttonAddNovel);
         showNovelsButton = findViewById(R.id.buttonShowNovels);
         syncButton = findViewById(R.id.buttonSyncNovels);
 
+        // Inicializar base de datos
         databaseHelper = new NovelDatabaseHelper(this);
 
+        // Botón para agregar novela
         addNovelButton.setOnClickListener(v -> {
             String title = titleEditText.getText().toString();
             String author = authorEditText.getText().toString();
             String genre = genreEditText.getText().toString();
-            int year = Integer.parseInt(yearEditText.getText().toString());
-            String imagePath = imagePathEditText.getText().toString(); // Recuperamos la ruta de la imagen
+            int year;
+
+            try {
+                year = Integer.parseInt(yearEditText.getText().toString());
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Por favor, ingresa un año válido", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String imagePath = imagePathEditText.getText().toString();
 
             if (title.isEmpty() || author.isEmpty() || genre.isEmpty() || imagePath.isEmpty()) {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
@@ -54,21 +66,33 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Novela agregada con éxito", Toast.LENGTH_SHORT).show();
 
             // Limpiar campos después de añadir la novela
-            titleEditText.setText("");
-            authorEditText.setText("");
-            genreEditText.setText("");
-            yearEditText.setText("");
-            imagePathEditText.setText(""); // Limpiamos el campo de imagen
+            clearFields();
         });
 
+        // Botón para mostrar novelas
         showNovelsButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ShowNovelsActivity.class);
             startActivity(intent);
         });
 
+        // Botón para sincronizar novelas
         syncButton.setOnClickListener(v -> scheduleNovelSync());
     }
 
+    /**
+     * Limpia los campos de entrada.
+     */
+    private void clearFields() {
+        titleEditText.setText("");
+        authorEditText.setText("");
+        genreEditText.setText("");
+        yearEditText.setText("");
+        imagePathEditText.setText("");
+    }
+
+    /**
+     * Programa la sincronización de novelas usando WorkManager.
+     */
     private void scheduleNovelSync() {
         String serverUrl = "https://api.example.com/novels";
 
@@ -84,4 +108,5 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Sincronización programada", Toast.LENGTH_SHORT).show();
     }
 }
+
 
