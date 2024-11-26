@@ -1,11 +1,9 @@
 package com.example.novelmanager.ui;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,7 +49,7 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
 
     @Override
     public int getItemCount() {
-        return novelList.size();
+        return novelList != null ? novelList.size() : 0;
     }
 
     public static class NovelViewHolder extends RecyclerView.ViewHolder {
@@ -59,7 +57,6 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
         private final TextView authorTextView;
         private final TextView genreTextView;
         private final TextView yearTextView;
-        private final ImageView imageView;
 
         public NovelViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,7 +64,6 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
             authorTextView = itemView.findViewById(R.id.text_view_author);
             genreTextView = itemView.findViewById(R.id.text_view_genre);
             yearTextView = itemView.findViewById(R.id.text_view_year);
-            imageView = itemView.findViewById(R.id.image_view_cover);
         }
 
         public void bind(Novel novel, OnItemClickListener listener) {
@@ -76,44 +72,9 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
             genreTextView.setText(novel.getGenre());
             yearTextView.setText(String.valueOf(novel.getYear()));
 
-            // Optimización de imágenes
-            if (novel.getImagePath() != null && !novel.getImagePath().isEmpty()) {
-                Bitmap bitmap = decodeSampledBitmapFromFile(novel.getImagePath(), 100, 150);
-                imageView.setImageBitmap(bitmap);
-            } else {
-                imageView.setImageResource(R.drawable.default_cover); // Imagen por defecto
-            }
-
             itemView.setOnClickListener(v -> listener.onItemClick(novel));
-        }
-
-        // Método para escalar imágenes
-        private Bitmap decodeSampledBitmapFromFile(String filePath, int reqWidth, int reqHeight) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(filePath, options);
-
-            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-            options.inJustDecodeBounds = false;
-            return BitmapFactory.decodeFile(filePath, options);
-        }
-
-        // Calcular factor de escala
-        private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-            int height = options.outHeight;
-            int width = options.outWidth;
-            int inSampleSize = 1;
-
-            if (height > reqHeight || width > reqWidth) {
-                int halfHeight = height / 2;
-                int halfWidth = width / 2;
-
-                while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
-                    inSampleSize *= 2;
-                }
-            }
-            return inSampleSize;
         }
     }
 }
+
 

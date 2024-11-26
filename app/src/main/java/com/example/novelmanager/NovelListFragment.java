@@ -1,5 +1,6 @@
 package com.example.novelmanager;
 
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -73,3 +74,4 @@ public class NovelListFragment extends Fragment implements NovelAdapter.OnItemCl
                 .commit();
     }
 }
+

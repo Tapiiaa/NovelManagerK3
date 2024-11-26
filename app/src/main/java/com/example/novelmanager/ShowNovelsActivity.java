@@ -3,7 +3,6 @@ package com.example.novelmanager;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,10 +13,10 @@ import com.example.novelmanager.ui.NovelAdapter;
 
 import java.util.List;
 
-public class ShowNovelsActivity extends AppCompatActivity implements NovelAdapter.OnItemClickListener {
+public class ShowNovelsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private NovelAdapter novelAdapter;
+    private NovelAdapter adapter;
     private NovelDatabaseHelper databaseHelper;
 
     @Override
@@ -25,37 +24,22 @@ public class ShowNovelsActivity extends AppCompatActivity implements NovelAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_novels);
 
-        // Configurar RecyclerView
         recyclerView = findViewById(R.id.recyclerViewNovels);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Inicializar la base de datos y cargar las novelas
         databaseHelper = new NovelDatabaseHelper(this);
+
+        // Obtén la lista de novelas desde la base de datos
         List<Novel> novels = databaseHelper.getAllNovels();
 
-        // Configurar el adaptador
-        novelAdapter = new NovelAdapter(novels, this);
-        recyclerView.setAdapter(novelAdapter);
-    }
+        // Configura el adaptador con la lista y un listener para manejar clics
+        adapter = new NovelAdapter(novels, novel -> {
+            // Lógica para manejar el clic en un elemento de la lista
+            // Por ejemplo, mostrar detalles en un Toast
+            Toast.makeText(this, "Seleccionaste: " + novel.getTitle(), Toast.LENGTH_SHORT).show();
+        });
 
-    @Override
-    public void onItemClick(@NonNull Novel novel) {
-        String genreMessage = getGenreMessage(novel.getGenre());
-        Toast.makeText(this, genreMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    private String getGenreMessage(String genre) {
-        switch (genre.toLowerCase()) {
-            case "terror":
-                return "Esta novela es de Terror. ¡Prepárate para asustarte!";
-            case "comedia":
-                return "Es una novela de Comedia. ¡Disfruta de las risas!";
-            case "drama":
-                return "Un drama intenso te espera en esta novela.";
-            case "prueba":
-                return "Estamos testeando la app, en breve desaparecerá este género.";
-            default:
-                return "Este es un género interesante: " + genre;
-        }
+        recyclerView.setAdapter(adapter);
     }
 }
+
