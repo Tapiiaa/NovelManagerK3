@@ -15,13 +15,15 @@ import java.util.List;
 public class NovelDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "novels.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3; // Incrementamos la versión por la nueva columna
     private static final String TABLE_NAME = "novels";
     private static final String COLUMN_TITLE = "title";
     private static final String COLUMN_AUTHOR = "author";
     private static final String COLUMN_GENRE = "genre";
     private static final String COLUMN_YEAR = "year";
     private static final String COLUMN_IS_FAVORITE = "isFavorite";
+    private static final String COLUMN_IMAGE_PATH = "imagePath"; // Nueva columna para las imágenes
+
     private final WeakReference<Context> contextRef;
 
     public NovelDatabaseHelper(Context context) {
@@ -36,7 +38,8 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_AUTHOR + " TEXT, "
                 + COLUMN_GENRE + " TEXT, "
                 + COLUMN_YEAR + " INTEGER, "
-                + COLUMN_IS_FAVORITE + " INTEGER DEFAULT 0)";
+                + COLUMN_IS_FAVORITE + " INTEGER DEFAULT 0, "
+                + COLUMN_IMAGE_PATH + " TEXT)"; // Nueva columna para las imágenes
         db.execSQL(createTable);
     }
 
@@ -44,6 +47,9 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
             db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COLUMN_IS_FAVORITE + " INTEGER DEFAULT 0");
+        }
+        if (oldVersion < 3) {
+            db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COLUMN_IMAGE_PATH + " TEXT");
         }
     }
 
@@ -55,6 +61,7 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_GENRE, novel.getGenre());
         values.put(COLUMN_YEAR, novel.getYear());
         values.put(COLUMN_IS_FAVORITE, isFavorite ? 1 : 0);
+        values.put(COLUMN_IMAGE_PATH, novel.getImagePath()); // Guardamos la ruta de la imagen
 
         db.insert(TABLE_NAME, null, values);
         db.close();
@@ -72,7 +79,9 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
                 String genre = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GENRE));
                 int year = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_YEAR));
                 boolean isFavorite = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_FAVORITE)) == 1;
-                Novel novel = new Novel(title, author, genre, year);
+                String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_PATH)); // Obtenemos la ruta de la imagen
+
+                Novel novel = new Novel(title, author, genre, year, imagePath);
                 novel.setFavorite(isFavorite);
                 novels.add(novel);
             } while (cursor.moveToNext());
@@ -107,7 +116,9 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
                 String author = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR));
                 String genre = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GENRE));
                 int year = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_YEAR));
-                Novel novel = new Novel(title, author, genre, year);
+                String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_PATH)); // Obtenemos la ruta de la imagen
+
+                Novel novel = new Novel(title, author, genre, year, imagePath);
                 novel.setFavorite(true);
                 novels.add(novel);
             } while (cursor.moveToNext());
@@ -117,3 +128,4 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
         return novels;
     }
 }
+

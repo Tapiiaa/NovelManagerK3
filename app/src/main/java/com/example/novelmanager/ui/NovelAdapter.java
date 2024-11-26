@@ -1,9 +1,12 @@
 package com.example.novelmanager.ui;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,20 +15,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.novelmanager.R;
 import com.example.novelmanager.model.Novel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHolder> {
 
-    private List<Novel> novelList;
+    private List<Novel> novels = new ArrayList<>();
     private OnItemClickListener listener;
+    private final LruCache<String, Bitmap> imageCache;
 
-    public interface OnItemClickListener {
-        void onItemClick(int position);
+    public NovelAdapter() {
+        // Inicializamos LruCache con el 1/8 de la memoria disponible
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        final int cacheSize = maxMemory / 8;
+        imageCache = new LruCache<>(cacheSize);
     }
 
-    public NovelAdapter(List<Novel> novelList, OnItemClickListener listener) {
-        this.novelList = novelList;
-        this.listener = listener;
+    public void setNovels(List<Novel> novels) {
+        this.novels = novels;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -38,57 +46,62 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
 
     @Override
     public void onBindViewHolder(@NonNull NovelViewHolder holder, int position) {
-        Novel novel = novelList.get(position);
-        holder.bindData(novel); // Optimización para evitar repetición de código
+        Novel currentNovel = novels.get(position);
+
+        holder.textViewTitle.setText(currentNovel.getTitle());
+        holder.textViewAuthor.setText(currentNovel.getAuthor());
+        holder.textViewGenre.setText(currentNovel.getGenre());
+        holder.textViewYear.setText(String.valueOf(currentNovel.getYear()));
+
+        // Cargar imagen eficientemente
+        String imagePath = currentNovel.getImagePath(); // Asegúrate de que Novel tenga este atributo
+        Bitmap bitmap = imageCache.get(imagePath);
+
+        if (bitmap == null) {
+            // Cargar y escalar la imagen solo si no está en caché
+            bitmap = BitmapFactory.decodeFile(imagePath);
+            if (bitmap != null) {
+                bitmap = Bitmap.createScaledBitmap(bitmap, 100, 150, false); // Ajusta dimensiones según tu diseño
+                imageCache.put(imagePath, bitmap);
+            }
+        }
+        holder.imageViewCover.setImageBitmap(bitmap);
     }
 
     @Override
     public int getItemCount() {
-        return novelList.size();
+        return novels.size();
     }
 
-    public Novel getNovelAtPosition(int position) {
-        return novelList.get(position);
-    }
-
-    public void setNovels(List<Novel> novels) {
-        this.novelList = novels;
-        notifyDataSetChanged(); // Asegura que la lista se actualiza en tiempo real
-    }
-
-    // ViewHolder optimizado
-    public class NovelViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewTitle, textViewAuthor, textViewGenre, textViewYear;
-        ImageButton favoriteButton, deleteButton;
+    class NovelViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textViewTitle;
+        private final TextView textViewAuthor;
+        private final TextView textViewGenre;
+        private final TextView textViewYear;
+        private final ImageView imageViewCover;
 
         public NovelViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewTitle = itemView.findViewById(R.id.textTitle);
-            textViewAuthor = itemView.findViewById(R.id.textAuthor);
-            textViewGenre = itemView.findViewById(R.id.textGenre);
-            textViewYear = itemView.findViewById(R.id.textYear);
-            favoriteButton = itemView.findViewById(R.id.buttonFavorite);
-            deleteButton = itemView.findViewById(R.id.buttonDelete);
-        }
+            textViewTitle = itemView.findViewById(R.id.text_view_title);
+            textViewAuthor = itemView.findViewById(R.id.text_view_author);
+            textViewGenre = itemView.findViewById(R.id.text_view_genre);
+            textViewYear = itemView.findViewById(R.id.text_view_year);
+            imageViewCover = itemView.findViewById(R.id.image_view_cover);
 
-        public void bindData(Novel novel) {
-            textViewTitle.setText(novel.getTitle());
-            textViewAuthor.setText(novel.getAuthor());
-            textViewGenre.setText(novel.getGenre());
-            textViewYear.setText(String.valueOf(novel.getYear()));
-
-            favoriteButton.setOnClickListener(v -> markAsFavorite(novel));
-            deleteButton.setOnClickListener(v -> deleteNovel(getAdapterPosition()));
+            itemView.setOnClickListener(v -> {
+                int position = getBindingAdapterPosition();
+                if (listener != null && position != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(novels.get(position));
+                }
+            });
         }
     }
 
-    private void markAsFavorite(Novel novel) {
-        novel.setFavorite(true);
-        notifyDataSetChanged(); // Actualiza la vista
+    public interface OnItemClickListener {
+        void onItemClick(Novel novel);
     }
 
-    private void deleteNovel(int position) {
-        novelList.remove(position);
-        notifyItemRemoved(position);
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 }

@@ -1,8 +1,9 @@
-// ShowNovelsActivity.java
 package com.example.novelmanager;
+
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,36 +25,39 @@ public class ShowNovelsActivity extends AppCompatActivity implements NovelAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_novels);
 
+        // Configurar RecyclerView
         recyclerView = findViewById(R.id.recyclerViewNovels);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        databaseHelper = new NovelDatabaseHelper(this);
 
+        // Inicializar la base de datos y cargar las novelas
+        databaseHelper = new NovelDatabaseHelper(this);
         List<Novel> novels = databaseHelper.getAllNovels();
-        novelAdapter = new NovelAdapter(novels, this);
+
+        // Configurar el adaptador
+        novelAdapter = new NovelAdapter();
+        novelAdapter.setNovels(novels);
+        novelAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(novelAdapter);
     }
 
     @Override
-    public void onItemClick(int position) {
-        Novel selectedNovel = novelAdapter.getNovelAtPosition(position);
-        String genreMessage = getGenreMessage(selectedNovel.getGenre());
+    public void onItemClick(@NonNull Novel novel) {
+        String genreMessage = getGenreMessage(novel.getGenre());
         Toast.makeText(this, genreMessage, Toast.LENGTH_SHORT).show();
     }
 
     private String getGenreMessage(String genre) {
         switch (genre.toLowerCase()) {
             case "terror":
-                return "Esta novela es de Terror. Prepárate para asustarte!";
+                return "Esta novela es de Terror. ¡Prepárate para asustarte!";
             case "comedia":
                 return "Es una novela de Comedia. ¡Disfruta de las risas!";
             case "drama":
                 return "Un drama intenso te espera en esta novela.";
             case "prueba":
-                return "Estamos testeando la app, en breve desaparecera este genero";
+                return "Estamos testeando la app, en breve desaparecerá este género.";
             default:
                 return "Este es un género interesante: " + genre;
         }
     }
-
-
 }

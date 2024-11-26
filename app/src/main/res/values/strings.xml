@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NovelManager</string>
+    <string name="favorite">Marcar como favorito</string>
+    <string name="delete">Eliminar novela</string>
 </resources>

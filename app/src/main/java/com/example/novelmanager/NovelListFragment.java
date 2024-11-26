@@ -1,6 +1,9 @@
 package com.example.novelmanager;
 
+
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,17 +27,20 @@ public class NovelListFragment extends Fragment implements NovelAdapter.OnItemCl
     private NovelViewModel novelViewModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_novel_list, container, false);
 
+        // Configurar RecyclerView
         recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setHasFixedSize(true);
 
-        // Inicializa novelAdapter con una lista vacía y this como listener
-        novelAdapter = new NovelAdapter(new ArrayList<>(), this);
+        // Inicializar NovelAdapter
+        novelAdapter = new NovelAdapter();
+        novelAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(novelAdapter);
 
+        // Configurar ViewModel
         novelViewModel = new ViewModelProvider(requireActivity()).get(NovelViewModel.class);
         novelViewModel.getAllNovels().observe(getViewLifecycleOwner(), new Observer<List<Novel>>() {
             @Override
@@ -47,7 +53,24 @@ public class NovelListFragment extends Fragment implements NovelAdapter.OnItemCl
     }
 
     @Override
-    public void onItemClick(int position) {
-        // Maneja el clic en el elemento de la lista aquí
+    public void onItemClick(Novel novel) {
+        // Manejar clics en los elementos de la lista
+        Bundle bundle = new Bundle();
+        bundle.putString("title", novel.getTitle());
+        bundle.putString("author", novel.getAuthor());
+        bundle.putString("genre", novel.getGenre());
+        bundle.putInt("year", novel.getYear());
+
+        // Crear el fragmento de detalles y pasarle los datos
+        NovelDetailFragment detailFragment = new NovelDetailFragment();
+        detailFragment.setArguments(bundle);
+
+        // Reemplazar el fragmento actual por el de detalles
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, detailFragment)
+                .addToBackStack(null) // Permite volver al fragmento anterior con el botón "Atrás"
+                .commit();
     }
+
 }

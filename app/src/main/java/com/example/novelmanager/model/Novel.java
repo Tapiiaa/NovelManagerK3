@@ -1,13 +1,10 @@
 package com.example.novelmanager.model;
 
-
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "novel_table")
 public class Novel {
-
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -15,19 +12,23 @@ public class Novel {
     private String author;
     private String genre;
     private int year;
+    private String imagePath; // Ruta de la imagen
+    private boolean isFavorite;
 
-    public Novel(String title, String author, String genre, int year) {
+    // Constructor completo
+    public Novel(String title, String author, String genre, int year, String imagePath) {
         this.title = title;
         this.author = author;
         this.genre = genre;
         this.year = year;
+        this.imagePath = imagePath;
+        this.isFavorite = false;
     }
 
-    // Getters and setters
+    // Getters y Setters
     public int getId() {
         return id;
     }
-
 
     public void setId(int id) {
         this.id = id;
@@ -65,7 +66,19 @@ public class Novel {
         this.year = year;
     }
 
-    public void setFavorite(boolean b) {
+    public String getImagePath() {
+        return imagePath;
+    }
 
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
     }
 }

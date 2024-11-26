@@ -1,55 +1,89 @@
-<!-- novel_item.xml -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
 
+    <!-- Título de la novela -->
     <TextView
-        android:id="@+id/textTitle"
+        android:id="@+id/text_view_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Título"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonFavorite" />
 
+    <!-- Autor -->
     <TextView
-        android:id="@+id/textAuthor"
+        android:id="@+id/text_view_author"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Autor"
-        app:layout_constraintTop_toBottomOf="@id/textTitle"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_title"
+        app:layout_constraintEnd_toStartOf="@id/buttonFavorite" />
 
+    <!-- Género -->
     <TextView
-        android:id="@+id/textGenre"
+        android:id="@+id/text_view_genre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Género"
-        app:layout_constraintTop_toBottomOf="@id/textAuthor"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textSize="14sp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_author"
+        app:layout_constraintEnd_toStartOf="@id/buttonFavorite" />
 
+    <!-- Año -->
     <TextView
-        android:id="@+id/textYear"
+        android:id="@+id/text_view_year"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Año"
-        app:layout_constraintTop_toBottomOf="@id/textGenre"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_genre"
+        app:layout_constraintEnd_toStartOf="@id/buttonFavorite" />
 
+    <!-- Botón de favorito -->
     <ImageButton
         android:id="@+id/buttonFavorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
         android:src="@drawable/ic_favorite"
+        android:contentDescription="Marcar como favorito"
+        app:tint="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Botón de eliminar -->
     <ImageButton
         android:id="@+id/buttonDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
         android:src="@drawable/ic_delete"
+        android:contentDescription="Eliminar novela"
+        app:tint="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttonFavorite" />
+
+    <ImageView
+        android:id="@+id/image_view_cover"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
