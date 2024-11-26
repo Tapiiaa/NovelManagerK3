@@ -1,33 +1,17 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/widget_layout"
-    android:orientation="vertical"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/widget_title"
-        android:layout_width="wrap_content"
+        android:id="@+id/appwidget_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Novelas Favoritas"
-        android:textStyle="bold" />
-
-    <!-- Tres TextViews para mostrar hasta tres novelas favoritas -->
-    <TextView
-        android:id="@+id/favorite_novel_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Favorita 1" />
-
-    <TextView
-        android:id="@+id/favorite_novel_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Favorita 2" />
-
-    <TextView
-        android:id="@+id/favorite_novel_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Favorita 3" />
+        android:text="Novelas almacenadas"
+        android:textSize="14sp"
+        android:textColor="#000000" />
 </LinearLayout>
