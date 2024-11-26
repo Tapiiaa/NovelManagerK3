@@ -34,12 +34,36 @@ public class ShowNovelsActivity extends AppCompatActivity {
 
         // Configura el adaptador con la lista y un listener para manejar clics
         adapter = new NovelAdapter(novels, novel -> {
-            // Lógica para manejar el clic en un elemento de la lista
-            // Por ejemplo, mostrar detalles en un Toast
-            Toast.makeText(this, "Seleccionaste: " + novel.getTitle(), Toast.LENGTH_SHORT).show();
+            // Limpia y analiza el género
+            String genre = novel.getGenre().trim().toLowerCase();
+
+            // Mostrar mensaje basado en el género
+            String message;
+            switch (genre) {
+                case "ficción":
+                    message = "Un género lleno de creatividad: Ficción.";
+                    break;
+                case "terror":
+                    message = "¡Prepárate para pasar miedo con este libro de Terror!";
+                    break;
+                case "romance":
+                    message = "Historias llenas de amor: Romance.";
+                    break;
+                case "fantasía":
+                    message = "Explora mundos mágicos con este libro de Fantasía.";
+                    break;
+                case "aventura":
+                    message = "Grandes aventuras te esperan.";
+                    break;
+                default:
+                    message = "Este es un género interesante: " + novel.getGenre();
+            }
+
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         });
 
         recyclerView.setAdapter(adapter);
     }
 }
+
 

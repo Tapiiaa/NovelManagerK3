@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.novelmanager.model.Novel;
 import com.example.novelmanager.ui.NovelAdapter;
@@ -55,23 +56,43 @@ public class NovelListFragment extends Fragment implements NovelAdapter.OnItemCl
 
     @Override
     public void onItemClick(Novel novel) {
-        // Manejar clics en los elementos de la lista
+        // Mostrar un mensaje dependiendo del género
+        String genreMessage;
+        switch (novel.getGenre().toLowerCase()) {
+            case "ficción":
+                genreMessage = "¡Ficción! Un género lleno de creatividad y aventuras.";
+                break;
+            case "terror":
+                genreMessage = "¡Terror! Prepárate para historias escalofriantes.";
+                break;
+            case "romance":
+                genreMessage = "¡Romance! Historias llenas de amor y emoción.";
+                break;
+            case "fantasía":
+                genreMessage = "¡Fantasía! Mundos mágicos te esperan.";
+                break;
+            default:
+                genreMessage = "Un género interesante: " + novel.getGenre();
+        }
+
+        Toast.makeText(requireContext(), genreMessage, Toast.LENGTH_SHORT).show();
+
+        // Navegar al fragmento de detalles como antes
         Bundle bundle = new Bundle();
         bundle.putString("title", novel.getTitle());
         bundle.putString("author", novel.getAuthor());
         bundle.putString("genre", novel.getGenre());
         bundle.putInt("year", novel.getYear());
 
-        // Crear el fragmento de detalles y pasarle los datos
         NovelDetailFragment detailFragment = new NovelDetailFragment();
         detailFragment.setArguments(bundle);
 
-        // Reemplazar el fragmento actual por el de detalles
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, detailFragment)
-                .addToBackStack(null) // Permite volver al fragmento anterior con el botón "Atrás"
+                .addToBackStack(null)
                 .commit();
     }
+
 }
 
