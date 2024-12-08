@@ -1,6 +1,5 @@
 package com.example.novelmanager;
 
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -27,36 +26,44 @@ public class NewAppWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
+        updateAllWidgets(context);
     }
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
+        clearWidgetData(context);
+    }
+
+    private void updateAllWidgets(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+                new android.content.ComponentName(context, NewAppWidget.class));
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
+        }
+    }
+
+    private void clearWidgetData(Context context) {
+        NovelDatabaseHelper databaseHelper = new NovelDatabaseHelper(context);
+        databaseHelper.getWritableDatabase().delete("novels", null, null);
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        // Recuperar todas las novelas de la base de datos
         NovelDatabaseHelper databaseHelper = new NovelDatabaseHelper(context);
         List<Novel> novels = databaseHelper.getAllNovels();
 
-        // Crear un string con todas las novelas
         StringBuilder novelsList = new StringBuilder();
         for (Novel novel : novels) {
             novelsList.append(novel.getTitle()).append("\n");
         }
 
-        // Configurar la vista del widget
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
-        views.setTextViewText(R.id.appwidget_text, novelsList.toString());
+        views.setTextViewText(R.id.appwidget_text, novelsList.length() > 0 ? novelsList.toString() : "No novels available");
 
-        // Agregar funcionalidad al widget: abrir la aplicación al hacer clic
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
 
-        // Actualizar el widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 }
-
