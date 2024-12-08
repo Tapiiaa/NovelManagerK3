@@ -1,5 +1,6 @@
 package com.example.novelmanager.database;
 
+
 import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
@@ -23,7 +24,7 @@ public abstract class NovelDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     NovelDatabase.class, "novel_database")
-                            .fallbackToDestructiveMigration() // Evita problemas de migración
+                            .fallbackToDestructiveMigration()
                             .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
@@ -32,19 +33,17 @@ public abstract class NovelDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    // Callback público con métodos públicos
     public static final RoomDatabase.Callback sRoomDatabaseCallback =
             new RoomDatabase.Callback() {
                 @Override
                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                     super.onCreate(db);
-                    // Lógica para inicializar datos en la base de datos si es necesario
                 }
 
                 @Override
                 public void onOpen(@NonNull SupportSQLiteDatabase db) {
                     super.onOpen(db);
-                    // Lógica opcional al abrir la base de datos
                 }
             };
 }
+

@@ -1,5 +1,6 @@
 package com.example.novelmanager.database;
 
+
 import android.app.Application;
 import androidx.lifecycle.LiveData;
 import com.example.novelmanager.model.Novel;
@@ -43,14 +44,13 @@ public class NovelRepository {
         executorService.execute(novelDao::deleteAllNovels);
     }
 
-    // Método para realizar una llamada remota para cargar novelas desde un servidor
     public void fetchNovelsFromServer(String serverUrl) {
         executorService.execute(() -> {
             try {
                 URL url = new URL(serverUrl);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
-                connection.setRequestProperty("Accept-Encoding", "gzip"); // Solicita respuesta comprimida
+                connection.setRequestProperty("Accept-Encoding", "gzip");
                 connection.setConnectTimeout(5000);
                 connection.setReadTimeout(5000);
 
@@ -62,20 +62,15 @@ public class NovelRepository {
                 }
                 reader.close();
                 connection.disconnect();
-
-                // Aquí procesarías el resultado JSON en novelas y las guardarías localmente
                 parseAndSaveNovels(result.toString());
-
             } catch (Exception e) {
                 e.printStackTrace();
-                // Manejar errores de red, como mostrar un mensaje al usuario
             }
         });
     }
 
-    // Método hipotético para parsear JSON y guardar novelas localmente
     private void parseAndSaveNovels(String jsonResponse) {
-        // Convertir jsonResponse a objetos Novel y guardarlos usando insert()
+        // Conversion de JSON a objetos Novel no implementado.
     }
 }
 

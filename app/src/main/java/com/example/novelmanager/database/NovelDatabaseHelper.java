@@ -1,5 +1,6 @@
 package com.example.novelmanager.database;
 
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -97,5 +98,4 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
         return novels;
     }
 }
-
 
