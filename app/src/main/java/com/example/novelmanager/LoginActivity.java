@@ -30,20 +30,16 @@ public class LoginActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
 
-        // Configurar botón para guardar el nombre
         saveNameButton.setOnClickListener(v -> {
             String name = nameInput.getText().toString().trim();
             if (!name.isEmpty()) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("userName", name);
                 editor.apply();
-
-                // Actualizar el texto de bienvenida
                 welcomeText.setText("Bienvenido, " + name);
             }
         });
 
-        // Configurar botón para proceder a la MainActivity
         proceedButton.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
@@ -54,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Mostrar el nombre guardado en el texto de bienvenida si ya existe
         String name = sharedPreferences.getString("userName", "");
         if (!name.isEmpty()) {
             welcomeText.setText("Bienvenido, " + name);

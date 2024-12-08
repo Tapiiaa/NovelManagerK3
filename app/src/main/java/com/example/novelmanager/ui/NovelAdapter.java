@@ -4,6 +4,7 @@ package com.example.novelmanager.ui;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -71,7 +72,6 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
             authorTextView.setText(novel.getAuthor());
             genreTextView.setText(novel.getGenre());
             yearTextView.setText(String.valueOf(novel.getYear()));
-
             itemView.setOnClickListener(v -> listener.onItemClick(novel));
         }
     }

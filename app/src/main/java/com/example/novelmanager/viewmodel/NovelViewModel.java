@@ -1,5 +1,6 @@
 package com.example.novelmanager.viewmodel;
 
+
 import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -21,9 +22,24 @@ public class NovelViewModel extends AndroidViewModel {
         allNovels = repository.getAllNovels();
     }
 
-    public void insert(Novel novel) { repository.insert(novel); }
-    public void update(Novel novel) { repository.update(novel); }
-    public void delete(Novel novel) { repository.delete(novel); }
-    public void deleteAllNovels() { repository.deleteAllNovels(); }
-    public LiveData<List<Novel>> getAllNovels() { return allNovels; }
+    public void insert(Novel novel) {
+        repository.insert(novel);
+    }
+
+    public void update(Novel novel) {
+        repository.update(novel);
+    }
+
+    public void delete(Novel novel) {
+        repository.delete(novel);
+    }
+
+    public void deleteAllNovels() {
+        repository.deleteAllNovels();
+    }
+
+    public LiveData<List<Novel>> getAllNovels() {
+        return allNovels;
+    }
 }
+

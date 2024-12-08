@@ -1,5 +1,6 @@
 package com.example.novelmanager.utils;
 
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
@@ -14,3 +15,4 @@ public class CompressionUtil {
         return byteStream.toByteArray();
     }
 }
+

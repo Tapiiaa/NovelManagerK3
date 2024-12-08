@@ -1,5 +1,6 @@
 package com.example.novelmanager.workers;
 
+
 import android.app.Application;
 import android.content.Context;
 
@@ -20,7 +21,6 @@ public class NovelSyncWorker extends Worker {
     @Override
     public Result doWork() {
         try {
-            // Obtiene la URL del servidor de los datos de entrada
             String serverUrl = getInputData().getString("serverUrl");
             if (serverUrl != null) {
                 NovelRepository repository = new NovelRepository((Application) getApplicationContext());
@@ -33,4 +33,3 @@ public class NovelSyncWorker extends Worker {
         }
     }
 }
-

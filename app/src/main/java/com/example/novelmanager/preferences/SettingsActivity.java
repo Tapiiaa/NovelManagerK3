@@ -1,5 +1,6 @@
 package com.example.novelmanager.preferences;
 
+
 import android.os.Bundle;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,3 +24,4 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 }
+
