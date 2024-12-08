@@ -1,73 +1,91 @@
 package com.example.novelmanager;
 
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.novelmanager.database.NovelDatabaseHelper;
 import com.example.novelmanager.model.Novel;
+import com.example.novelmanager.ui.NovelAdapter;
+import com.example.novelmanager.viewmodel.NovelViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText titleEditText, authorEditText, genreEditText, yearEditText;
-    private Button addNovelButton, showNovelsButton;
-    private NovelDatabaseHelper databaseHelper;
+    private EditText editTextTitle, editTextAuthor, editTextGenre, editTextYear;
+    private RecyclerView recyclerView;
+    private NovelAdapter novelAdapter;
+    private NovelViewModel novelViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        titleEditText = findViewById(R.id.editTextTitle);
-        authorEditText = findViewById(R.id.editTextAuthor);
-        genreEditText = findViewById(R.id.editTextGenre);
-        yearEditText = findViewById(R.id.editTextYear);
-        addNovelButton = findViewById(R.id.buttonAddNovel);
-        showNovelsButton = findViewById(R.id.buttonShowNovels);
+        // Inicialización de los elementos de la UI
+        editTextTitle = findViewById(R.id.editTextTitle);
+        editTextAuthor = findViewById(R.id.editTextAuthor);
+        editTextGenre = findViewById(R.id.editTextGenre);
+        editTextYear = findViewById(R.id.editTextYear);
+        Button buttonSaveNovel = findViewById(R.id.buttonSaveNovel);
+        Button buttonShowMap = findViewById(R.id.buttonShowMap);
+        recyclerView = findViewById(R.id.recyclerView);
 
-        databaseHelper = new NovelDatabaseHelper(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
 
-        addNovelButton.setOnClickListener(v -> {
-            String title = titleEditText.getText().toString();
-            String author = authorEditText.getText().toString();
-            String genre = genreEditText.getText().toString();
-            int year;
+        // Configuración del adaptador
+        novelAdapter = new NovelAdapter(new ArrayList<>(), novel ->
+                Toast.makeText(MainActivity.this, "Seleccionaste: " + novel.getTitle(), Toast.LENGTH_SHORT).show());
+        recyclerView.setAdapter(novelAdapter);
 
-            try {
-                year = Integer.parseInt(yearEditText.getText().toString());
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "Por favor, ingresa un año válido", Toast.LENGTH_SHORT).show();
-                return;
+        // Configuración del ViewModel
+        novelViewModel = new ViewModelProvider(this).get(NovelViewModel.class);
+        novelViewModel.getAllNovels().observe(this, new Observer<List<Novel>>() {
+            @Override
+            public void onChanged(List<Novel> novels) {
+                novelAdapter.setNovels(novels);
             }
-
-            if (title.isEmpty() || author.isEmpty() || genre.isEmpty()) {
-                Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Novel novel = new Novel(title, author, genre, year);
-            databaseHelper.addNovel(novel);
-            Toast.makeText(this, "Novela agregada con éxito", Toast.LENGTH_SHORT).show();
-            clearFields();
         });
 
-        showNovelsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ShowNovelsActivity.class);
+        // Botón para guardar una novela
+        buttonSaveNovel.setOnClickListener(v -> {
+            String title = editTextTitle.getText().toString();
+            String author = editTextAuthor.getText().toString();
+            String genre = editTextGenre.getText().toString();
+            String yearStr = editTextYear.getText().toString();
+
+            if (TextUtils.isEmpty(title) || TextUtils.isEmpty(author) || TextUtils.isEmpty(genre) || TextUtils.isEmpty(yearStr)) {
+                Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int year = Integer.parseInt(yearStr);
+            Novel novel = new Novel(title, author, genre, year, 0.0, 0.0); // Latitud y longitud en 0 por defecto
+            novelViewModel.insert(novel);
+            Toast.makeText(this, "Novela guardada", Toast.LENGTH_SHORT).show();
+
+            // Limpiar campos
+            editTextTitle.setText("");
+            editTextAuthor.setText("");
+            editTextGenre.setText("");
+            editTextYear.setText("");
+        });
+
+        // Botón para abrir el mapa
+        buttonShowMap.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, MapActivity.class);
             startActivity(intent);
         });
     }
-
-    private void clearFields() {
-        titleEditText.setText("");
-        authorEditText.setText("");
-        genreEditText.setText("");
-        yearEditText.setText("");
-    }
 }
-
-

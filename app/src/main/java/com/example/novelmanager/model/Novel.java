@@ -13,15 +13,18 @@ public class Novel {
     private String author;
     private String genre;
     private int year;
+    private double latitude;
+    private double longitude;
 
-    public Novel(String title, String author, String genre, int year) {
+    public Novel(String title, String author, String genre, int year, double latitude, double longitude) {
         this.title = title;
         this.author = author;
         this.genre = genre;
         this.year = year;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    // Getters y Setters
     public int getId() {
         return id;
     }
@@ -60,5 +63,21 @@ public class Novel {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

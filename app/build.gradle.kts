@@ -48,6 +48,8 @@ dependencies {
 
     // Room database dependencies
     implementation("androidx.room:room-runtime:2.5.2")
+    implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
     annotationProcessor("androidx.room:room-compiler:2.5.2")
     implementation(libs.androidx.sqlite)
     annotationProcessor("androidx.room:room-compiler:2.3.0")

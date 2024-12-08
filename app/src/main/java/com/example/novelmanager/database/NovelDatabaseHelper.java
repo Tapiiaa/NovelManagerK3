@@ -15,7 +15,7 @@ import java.util.List;
 public class NovelDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "novels.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     private static final String TABLE_NAME = "novels";
     private static final String COLUMN_ID = "id";
@@ -23,6 +23,8 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_AUTHOR = "author";
     private static final String COLUMN_GENRE = "genre";
     private static final String COLUMN_YEAR = "year";
+    private static final String COLUMN_LATITUDE = "latitude";
+    private static final String COLUMN_LONGITUDE = "longitude";
 
     public NovelDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -35,7 +37,9 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_TITLE + " TEXT, " +
                 COLUMN_AUTHOR + " TEXT, " +
                 COLUMN_GENRE + " TEXT, " +
-                COLUMN_YEAR + " INTEGER)";
+                COLUMN_YEAR + " INTEGER, " +
+                COLUMN_LATITUDE + " REAL, " +
+                COLUMN_LONGITUDE + " REAL)";
         db.execSQL(createTable);
     }
 
@@ -52,6 +56,8 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_AUTHOR, novel.getAuthor());
         values.put(COLUMN_GENRE, novel.getGenre());
         values.put(COLUMN_YEAR, novel.getYear());
+        values.put(COLUMN_LATITUDE, novel.getLatitude());
+        values.put(COLUMN_LONGITUDE, novel.getLongitude());
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
@@ -67,7 +73,9 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GENRE)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_YEAR))
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_YEAR)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_LATITUDE)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_LONGITUDE))
                 );
                 novels.add(novel);
             } while (cursor.moveToNext());
@@ -88,7 +96,9 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GENRE)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_YEAR))
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_YEAR)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_LATITUDE)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_LONGITUDE))
                 );
                 novels.add(novel);
             } while (cursor.moveToNext());
@@ -98,4 +108,3 @@ public class NovelDatabaseHelper extends SQLiteOpenHelper {
         return novels;
     }
 }
-
