@@ -1,14 +1,18 @@
 package com.example.novelmanager.database;
 
 
+
 import android.app.Application;
+import android.util.Log;
 import androidx.lifecycle.LiveData;
 import com.example.novelmanager.model.Novel;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,6 +21,7 @@ public class NovelRepository {
     private NovelDao novelDao;
     private LiveData<List<Novel>> allNovels;
     private final ExecutorService executorService = Executors.newFixedThreadPool(2);
+    private static final Map<String, String> responseCache = new HashMap<>();
 
     public NovelRepository(Application application) {
         NovelDatabase database = NovelDatabase.getInstance(application);
@@ -47,6 +52,11 @@ public class NovelRepository {
     public void fetchNovelsFromServer(String serverUrl) {
         executorService.execute(() -> {
             try {
+                if (responseCache.containsKey(serverUrl)) {
+                    Log.d("Network", "Using cached response");
+                    parseAndSaveNovels(responseCache.get(serverUrl));
+                    return;
+                }
                 URL url = new URL(serverUrl);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
@@ -62,9 +72,10 @@ public class NovelRepository {
                 }
                 reader.close();
                 connection.disconnect();
+                responseCache.put(serverUrl, result.toString());
                 parseAndSaveNovels(result.toString());
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("Network", "Error fetching data: " + e.getMessage());
             }
         });
     }
@@ -73,4 +84,5 @@ public class NovelRepository {
         // Conversion de JSON a objetos Novel no implementado.
     }
 }
+
 

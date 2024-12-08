@@ -5,6 +5,8 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.novelmanager.database.NovelDatabaseHelper;
@@ -20,32 +22,32 @@ public class NewAppWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            if (shouldUpdateWidget(context)) {
+                updateAppWidget(context, appWidgetManager, appWidgetId);
+            }
         }
     }
 
     @Override
     public void onEnabled(Context context) {
-        updateAllWidgets(context);
+        Log.d("Widget", "Widget enabled");
     }
 
     @Override
     public void onDisabled(Context context) {
-        clearWidgetData(context);
+        Log.d("Widget", "Widget disabled");
     }
 
-    private void updateAllWidgets(Context context) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
-                new android.content.ComponentName(context, NewAppWidget.class));
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+    private boolean shouldUpdateWidget(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("WidgetPrefs", Context.MODE_PRIVATE);
+        long lastUpdate = prefs.getLong("lastUpdate", 0);
+        long currentTime = System.currentTimeMillis();
+
+        if (currentTime - lastUpdate > 3600000) { // Update every hour
+            prefs.edit().putLong("lastUpdate", currentTime).apply();
+            return true;
         }
-    }
-
-    private void clearWidgetData(Context context) {
-        NovelDatabaseHelper databaseHelper = new NovelDatabaseHelper(context);
-        databaseHelper.getWritableDatabase().delete("novels", null, null);
+        return false;
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
